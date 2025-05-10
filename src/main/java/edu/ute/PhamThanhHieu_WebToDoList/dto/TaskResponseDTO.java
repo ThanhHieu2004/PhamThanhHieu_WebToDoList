@@ -1,16 +1,17 @@
 package edu.ute.PhamThanhHieu_WebToDoList.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
 public class TaskResponseDTO {
-    private int id;
+    private int id;    
     private String title;
     private String description;
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
     private Boolean isCompleted;
-    private String priority;
-    private String categoryName;
+    private String priority;    private String categoryName;
+    private int categoryId;
     private Set<String> tags;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -37,13 +38,11 @@ public class TaskResponseDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public LocalDateTime getDueDate() {
+    }    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDateTime dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -65,10 +64,16 @@ public class TaskResponseDTO {
 
     public String getCategoryName() {
         return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
+    }    public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+    
+    public int getCategoryId() {
+        return categoryId;
+    }
+    
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public Set<String> getTags() {
@@ -94,6 +99,8 @@ public class TaskResponseDTO {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+
 
     // Getters and setters
 

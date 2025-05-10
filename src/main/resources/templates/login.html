@@ -3,67 +3,75 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login to ToDoIt</title>
-    <link rel="stylesheet" href="./loginStyle/style.css" />
+    <title>ToDoIt</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
   </head>
-  <body>
+  <body th:attr="data-signup=${showSignup}">
     <h1 class="tip">ToDoIt - Organize your schedule</h1>
     <div class="cont">
       <div class="form sign-in">
-        <h2>Welcome back,</h2>
-        <label>
-          <span>Email</span>
-          <input type="email" />
-        </label>
-        <label>
-          <span>Password</span>
-          <input type="password" />
-        </label>
-        <p class="forgot-pass">Forgot password?</p>
-        <button type="button" class="submit">Log In</button>
+        <h2>Chào mừng bạn quay trở lại,</h2>
+        <p th:if="${loginError}" th:text="${loginError}" style="color: red; margin: 10px; text-align: center;"></p>
+        <p th:if="${success}" th:text="${success}" style="color: green; margin: 10px; text-align: center;"></p>
+        <form th:action="@{/login}" method="post">
+          <label>
+            <span>Email</span>
+            <input type="email" name="username" />
+          </label>
+          <label>
+            <span>Mật khẩu</span>
+            <input type="password" name="password" />
+          </label>
+          <p class="forgot-pass">Quên mật khẩu?</p>
+          <button type="submit" class="submit">Đăng nhập</button>
+        </form>
         <button type="button" class="fb-btn">
-          Connect with <span>facebook</span>
+          Đăng nhập với <span>facebook</span>
         </button>
       </div>
       <div class="sub-cont">
         <div class="img">
           <div class="img__text m--up">
-            <h2>New here?</h2>
-            <p>Sign up and discover great amount of new opportunities!</p>
+            <h2>Thành viên mới?</h2>
+            <p>Đăng kí và cùng làm việc hiệu quả hơn!</p>
           </div>
           <div class="img__text m--in">
-            <h2>One of us?</h2>
+            <h2>Đã là thành viên?</h2>
             <p>
-              If you already has an account, just log in. We've missed you!
+              Nếu bạn đã có tài khoản, hãy đăng nhập để tiếp tục làm việc!
             </p>
           </div>
           <div class="img__btn">
-            <span class="m--up">Sign Up</span>
-            <span class="m--in">Log In</span>
+            <span class="m--up">Đăng ký</span>
+            <span class="m--in">Đăng nhập</span>
           </div>
         </div>
         <div class="form sign-up">
-          <h2>Time to feel like home,</h2>
-          <label>
-            <span>Name</span>
-            <input type="text" />
-          </label>
-          <label>
-            <span>Email</span>
-            <input type="email" />
-          </label>
-          <label>
-            <span>Password</span>
-            <input type="password" />
-          </label>
-          <button type="button" class="submit">Sign Up</button>
+          <p th:if="${error}" th:text="${error}" style="color: red; margin-bottom: 10px;"></p>
+          <p th:if="${success}" th:text="${success}" style="color: green; margin-bottom: 10px;"></p>
+          <h2>Cùng tham gia với chúng tôi,</h2>
+          <form th:action="@{/signup}" method="post">
+            <label>
+              <span>Họ tên</span>
+              <input type="name" name="username" /> 
+            </label>
+            <label>
+              <span>Email</span>
+              <input type="email" name="email" />
+            </label>
+            <label>
+              <span>Mật khẩu</span>
+              <input type="password" name="password" />
+            </label>
+            <button type="submit" class="submit">Đăng ký</button>
+          </form>
           <button type="button" class="fb-btn">
-            Join with <span>facebook</span>
+            Đăng ký với <span>facebook</span>
           </button>
         </div>
       </div>
     </div>
 
-    <script src="/js/login.js"></script>
+    <script th:src="@{/js/script.js}"></script>
   </body>
 </html>

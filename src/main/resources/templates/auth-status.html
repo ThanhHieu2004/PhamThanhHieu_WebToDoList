@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Authentication Status</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+    <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
+        <h1>Authentication Status</h1>
+        
+        <div th:if="${#authentication != null and #authentication.authenticated}">
+            <div style="background-color: #dff2bf; color: #4F8A10; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <h2>You are authenticated!</h2>
+                <p>Username: <strong th:text="${#authentication.name}"></strong></p>
+                <p>Authorities: <strong th:text="${#authentication.authorities}"></strong></p>
+            </div>
+            
+            <p>This page confirms that you are properly logged in. You can now:</p>
+            <ul>
+                <li><a th:href="@{/}">Go to the Home Page</a></li>
+                <li><a th:href="@{/logout}">Log Out</a></li>
+            </ul>
+        </div>
+        
+        <div th:unless="${#authentication != null and #authentication.authenticated}">
+            <div style="background-color: #ffbaba; color: #D8000C; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <h2>You are not authenticated</h2>
+                <p>Please log in to access protected resources.</p>
+            </div>
+            
+            <p><a th:href="@{/login}">Go to Login Page</a></p>
+        </div>
+    </div>
+</body>
+</html>

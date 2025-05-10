@@ -13,8 +13,8 @@ import edu.ute.PhamThanhHieu_WebToDoList.model.Task;
 import edu.ute.PhamThanhHieu_WebToDoList.utils.TagMapperHelper;
 
 @Mapper(componentModel = "spring", uses = {TagMapperHelper.class})
-public interface TaskMapper{
-    @Mapping(source = "category.name", target = "categoryName")
+public interface TaskMapper{    @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "tags", target = "tags", qualifiedByName = "mapTagsToNames")
     TaskResponseDTO toDto(Task task); 
 
