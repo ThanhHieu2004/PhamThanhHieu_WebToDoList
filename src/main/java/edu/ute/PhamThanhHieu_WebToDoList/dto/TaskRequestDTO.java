@@ -12,8 +12,8 @@ public class TaskRequestDTO {
     private String description;
     private LocalDateTime dueDate;
     private Boolean isCompleted = false;
-    private String priority = PRIORITY.MEDIUM.name();
-    private Long categoryId;
+    private String priority = PRIORITY.medium.name();
+    private int categoryId;
     private Set<String> tags;
 
     public String getTitle() {
@@ -56,11 +56,11 @@ public class TaskRequestDTO {
         this.priority = priority;
     }
 
-    public Long getCategoryId() {
+    public int getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Long categoryId) {
+    public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
     }
 

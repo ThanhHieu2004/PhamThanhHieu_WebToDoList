@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import edu.ute.PhamThanhHieu_WebToDoList.model.Tag;
 
-public interface TagRepository extends JpaRepository<Tag, Long> {
+public interface TagRepository extends JpaRepository<Tag, Integer> {
     Optional<Tag> findByName(String name);
 }
 

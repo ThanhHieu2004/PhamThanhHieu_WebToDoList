@@ -23,7 +23,7 @@ import jakarta.persistence.Table;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -41,7 +41,7 @@ public class Task {
     private Boolean isCompleted = false;
 
     @Enumerated(EnumType.STRING)
-    private PRIORITY priority = PRIORITY.MEDIUM;
+    private PRIORITY priority = PRIORITY.medium;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -53,11 +53,11 @@ public class Task {
     @JoinTable(name = "task_tags", joinColumns = @JoinColumn(name = "task_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
