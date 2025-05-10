@@ -1,5 +1,6 @@
 package edu.ute.PhamThanhHieu_WebToDoList.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,11 +34,10 @@ public class Task {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(nullable = false)
-    private String title;
+    @Column(nullable = false)    private String title;
 
     private String description;
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
     private Boolean isCompleted = false;
 
     @Enumerated(EnumType.STRING)
@@ -91,13 +91,11 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public LocalDateTime getDueDate() {
+    }    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDateTime dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
