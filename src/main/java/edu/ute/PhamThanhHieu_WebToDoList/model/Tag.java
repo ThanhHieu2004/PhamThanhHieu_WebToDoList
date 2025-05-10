@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(unique = true, nullable = false, length = 50)
     private String name;
@@ -24,11 +24,11 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private Set<Task> tasks = new HashSet<>();
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

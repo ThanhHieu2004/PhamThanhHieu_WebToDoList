@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 public class TaskHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)

@@ -1,5 +1,8 @@
 package edu.ute.PhamThanhHieu_WebToDoList.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -13,7 +16,17 @@ import edu.ute.PhamThanhHieu_WebToDoList.utils.TagMapperHelper;
 public interface TaskMapper{
     @Mapping(source = "category.name", target = "categoryName")
     @Mapping(source = "tags", target = "tags", qualifiedByName = "mapTagsToNames")
-    TaskResponseDTO toDto (Task task);
+    TaskResponseDTO toDto(Task task); 
+
+    default List<TaskResponseDTO> toDtoList(List<Task> tasks) {
+        if (tasks == null) {
+            return null;
+        }
+        return tasks.stream()
+                    .map(this::toDto)  
+                    .collect(Collectors.toList());
+    }
+
 
     @Mapping(source = "categoryId", target = "category.id")
     @Mapping(target = "tags", ignore = true) // Map this later

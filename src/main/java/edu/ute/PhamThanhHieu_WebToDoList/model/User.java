@@ -3,9 +3,7 @@ package edu.ute.PhamThanhHieu_WebToDoList.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale.Category;
 
-import org.springframework.scheduling.config.Task;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -21,7 +19,7 @@ import jakarta.persistence.OneToMany;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(nullable = false, unique = true, length = 50)
     private String username;
