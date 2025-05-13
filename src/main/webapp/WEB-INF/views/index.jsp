@@ -1,0 +1,360 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToDoIt</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        background: #eee;
+      }
+
+      .filter {
+        border-top-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+
+      .profiles img {
+        margin-right: -6px;
+      }
+
+      .col-md-4 {
+        margin-top: 26px;
+      }
+
+      /* Delete button styles */
+      .delete-task-btn {
+        color: #6c757d;
+        cursor: pointer;
+        transition: color 0.3s ease;
+        position: relative;
+      }
+
+      .delete-task-btn:hover {
+        color: #dc3545;
+      }
+
+      .delete-task-btn:hover:after {
+        content: "Xoá task";
+        position: absolute;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-size: 0.7rem;
+        bottom: -20px;
+        right: 0;
+        white-space: nowrap;
+      }
+
+      /* Search bar styles */
+      .search-container {
+        position: relative;
+        max-width: 350px;
+        width: 100%;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 10px 45px 10px 15px;
+        border-radius: 25px;
+        border: 1px solid #ddd;
+        transition: all 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-input:focus {
+        border-color: #3da2c3;
+        box-shadow: 0 2px 10px rgba(61, 162, 195, 0.2);
+        outline: none;
+      }
+      .search-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        cursor: pointer;
+        transition: color 0.3s ease;
+        z-index: 10;
+      }
+
+      .search-icon:hover {
+        color: #3da2c3;
+      }
+      /* Search result styling */
+      .text-primary {
+        font-weight: bold;
+      }
+
+      .search-input::placeholder {
+        color: #aaa;
+      }
+
+      /* Dropdown styling */
+      .dropdown-toggle {
+        text-decoration: none;
+        color: #3da2c3;
+        font-weight: 500;
+      }
+
+      .dropdown-toggle:hover {
+        color: #2a8ba5;
+      }
+
+      .dropdown-menu {
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .dropdown-item {
+        padding: 8px 20px;
+        transition: background-color 0.2s ease;
+      }
+      .dropdown-item:hover {
+        background-color: #f0f8ff;
+      }
+
+      .dropdown-item.active {
+        background-color: #e9f5ff;
+        color: #1a73e8;
+        font-weight: 500;
+      }
+
+      .dropdown-item.active:hover {
+        background-color: #dcefff;
+      }
+    </style>
+  </head>
+  <body>
+    <div th:insert="_header :: header"></div>
+    <div class="container mt-5 mb-5">
+      <div class="row">
+        <div class="col-md-12">
+          <div
+            class="d-flex flex-row justify-content-between align-items-center filters"
+          >
+            <!-- Count the total number of task -->
+            <h6 th:if="${searchKeyword == null}">
+              Có tất cả <span th:text="${taskCount}"></span> tasks
+            </h6>
+            <h6 th:if="${searchKeyword != null}">
+              Tìm thấy <span th:text="${taskCount}"></span> tasks với từ khóa
+              "<span th:text="${searchKeyword}" class="text-primary"></span>"
+              <a
+                th:href="@{/(sortBy=${sortBy})}"
+                class="ms-2 text-decoration-none"
+                ><i class="fas fa-times-circle"></i> Xóa tìm kiếm</a
+              >
+            </h6>
+            <form
+              class="search-container"
+              th:action="@{/search_tasks}"
+              method="get"
+            >
+              <input
+                type="text"
+                name="keyword"
+                class="search-input"
+                th:value="${searchKeyword}"
+                placeholder="Tìm kiếm task..."
+                autocomplete="off"
+              />
+              <input type="hidden" name="sortBy" th:value="${sortBy}" />
+              <span class="search-icon">
+                <i class="fas fa-search"></i>
+              </span>
+            </form>
+            <div class="right-sort">
+              <div class="sort-by dropdown">
+                <span class="mr-1">Sắp xếp theo:</span>
+                <a
+                  href="#"
+                  class="dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  id="sortDropdown"
+                  aria-expanded="false"
+                >
+                  <span
+                    th:with="sortVal=${sortBy == null} ? 'newest' : ${sortBy}"
+                    th:text="${sortVal == 'newest'} ? 'Mới nhất' : (${sortVal == 'dueDate'} ? 'Ngày hết hạn' : (${sortVal == 'priority'} ? 'Độ ưu tiên' : 'Mới nhất'))"
+                    >Mới nhất</span
+                  >
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      th:with="isNewest=${sortBy == null || sortBy == 'newest'}"
+                      th:classappend="${isNewest} ? 'active' : ''"
+                      th:href="${searchKeyword != null} ? 
+                      @{/search_tasks(keyword=${searchKeyword},sortBy=newest)} : @{/(sortBy=newest)}"
+                    >
+                      <i class="fas fa-check me-2" th:if="${isNewest}"></i>
+                      Mới nhất
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      th:with="isDueDate=${sortBy == 'dueDate'}"
+                      th:classappend="${isDueDate} ? 'active' : ''"
+                      th:href="${searchKeyword != null} ? 
+                      @{/search_tasks(keyword=${searchKeyword},sortBy=dueDate)} : @{/(sortBy=dueDate)}"
+                    >
+                      <i class="fas fa-check me-2" th:if="${isDueDate}"></i>
+                      Ngày hết hạn
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      th:with="isPriority=${sortBy == 'priority'}"
+                      th:classappend="${isPriority} ? 'active' : ''"
+                      th:href="${searchKeyword != null} ? 
+                      @{/search_tasks(keyword=${searchKeyword},sortBy=priority)} : @{/(sortBy=priority)}"
+                    >
+                      <i class="fas fa-check me-2" th:if="${isPriority}"></i>
+                      Độ ưu tiên
+                    </a>
+                  </li>
+                </ul>
+                <a
+                  th:href="@{/create_task}"
+                  class="btn btn-outline-dark btn-sm ml-3 filter"
+                  type="button"
+                >
+                  Thêm Task&nbsp;<i class="fa fa-tasks" aria-hidden="true"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- TO DO CARD -->
+      <div class="row mt-1">
+        <div class="col-md-4" th:each="task: ${taskListResponse.tasks}">
+          <div class="p-card bg-white p-2 rounded px-3">
+            <div
+              class="d-flex align-items-center credits justify-content-between"
+            >
+              <div>
+                <img
+                  th:src="@{/images/logo_ute.png}"
+                  width="24px"
+                  alt="logo ute"
+                /><span> </span><span
+                  class="text-black-50 ml-2"
+                  th:text="'Độ ưu tiên: ' + ${task.priority}"
+                ></span>
+              </div>
+              <a
+                href="#"
+                class="delete-task-btn"
+                th:attr="onclick='confirmDelete(event, ' + ${task.id} + ', \'' + ${task.title} + '\')'"
+                title="Delete task"
+              >
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </div>
+            <h5 class="mt-2" th:text="${task.title}"></h5>
+            <!-- <span
+              th:class="${task.id % 2 != 0 ? 'badge badge-danger py-1 mb-2' : 'badge badge-primary py-1 mb-2'}"
+              >Marketing &amp; Sales</span
+            > -->
+            <span class="d-block mb-5" th:text="${task.description}"></span>
+            <div class="d-flex justify-content-between stats">
+              <div>
+                <i class="fa fa-calendar-o"></i
+                ><span class="ml-2" th:text="${task.dueDate}">1 days ago</span>
+              </div>
+              <a
+                th:href="@{/edit_task/{id}(id=${task.id})}"
+                class="btn btn-success"
+                >Sửa task</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end text-right mt-2">
+        <nav>
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous"
+                ><span aria-hidden="true">&laquo;</span></a
+              >
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next"
+                ><span aria-hidden="true">&raquo;</span></a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <div th:insert="_footer :: footer"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/994ab2774e.js"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      function confirmDelete(event, taskId, taskTitle) {
+        event.preventDefault();
+        if (
+          confirm('Bạn có chắc muốn xóa công việc "' + taskTitle + '" không?')
+        ) {
+          window.location.href = "/delete_task/" + taskId;
+        }
+      }
+
+      // Search functionality      document.addEventListener('DOMContentLoaded', function() {
+      const searchIcon = document.querySelector(".search-icon");
+      const searchForm = document.querySelector(".search-container");
+
+      searchIcon.addEventListener("click", function () {
+        searchForm.submit();
+      });
+
+      // Submit form when pressing Enter
+      const searchInput = document.querySelector(".search-input");
+      searchInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          searchForm.submit();
+        }
+      });
+
+      // Initialize Bootstrap 5 dropdowns
+      var dropdownElementList = [].slice.call(
+        document.querySelectorAll(".dropdown-toggle")
+      );
+      var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+        return new bootstrap.Dropdown(dropdownToggleEl);
+      });
+    </script>
+  </body>
+</html>

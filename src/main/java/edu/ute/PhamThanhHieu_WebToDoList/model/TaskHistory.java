@@ -22,8 +22,6 @@ public class TaskHistory {
     @JoinColumn(name = "task_id", nullable = false)
     private Task task;
 
-    private String action;
-
     @Column(name = "old_value", columnDefinition = "TEXT")
     private String oldValue;
 
