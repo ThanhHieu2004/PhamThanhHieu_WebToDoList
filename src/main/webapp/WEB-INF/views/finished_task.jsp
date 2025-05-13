@@ -1,9 +1,10 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title th:text="${pageTitle != null} ? ${pageTitle} + ' - ToDoIt' : 'ToDoIt'">ToDoIt</title>
+    <title th:text="${pageTitle != null} ? ${pageTitle} + ' - ToDoIt' : 'Công việc đã hoàn thành - ToDoIt'">ToDoIt</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -161,13 +162,13 @@
           >
             <!-- Count the total number of task -->
             <h6 th:if="${searchKeyword == null}">
-              Có tất cả <span th:text="${taskCount}"></span> công việc cần làm
+              Có tất cả <span th:text="${taskCount}"></span> công việc đã hoàn thành
             </h6>
             <h6 th:if="${searchKeyword != null}">
               Tìm thấy <span th:text="${taskCount}"></span> tasks với từ khóa
               "<span th:text="${searchKeyword}" class="text-primary"></span>"
               <a
-                th:href="@{/(sortBy=${sortBy})}"
+                th:href="@{/finished-tasks(sortBy=${sortBy})}"
                 class="ms-2 text-decoration-none"
                 ><i class="fas fa-times-circle"></i> Xóa tìm kiếm</a
               >
@@ -215,7 +216,7 @@
                       th:classappend="${isNewest} ? 'active' : ''"
                       th:href="${searchKeyword != null} ? 
                       @{/search_tasks(keyword=${searchKeyword},sortBy=newest,isCompleted=${isFinishedTasksPage})} : 
-                      @{/(sortBy=newest)}"
+                      @{/finished-tasks(sortBy=newest)}"
                     >
                       <i class="fas fa-check me-2" th:if="${isNewest}"></i>
                       Mới nhất
@@ -228,7 +229,7 @@
                       th:classappend="${isDueDate} ? 'active' : ''"
                       th:href="${searchKeyword != null} ? 
                       @{/search_tasks(keyword=${searchKeyword},sortBy=dueDate,isCompleted=${isFinishedTasksPage})} : 
-                      @{/(sortBy=dueDate)}"
+                      @{/finished-tasks(sortBy=dueDate)}"
                     >
                       <i class="fas fa-check me-2" th:if="${isDueDate}"></i>
                       Ngày hết hạn
@@ -241,7 +242,7 @@
                       th:classappend="${isPriority} ? 'active' : ''"
                       th:href="${searchKeyword != null} ? 
                       @{/search_tasks(keyword=${searchKeyword},sortBy=priority,isCompleted=${isFinishedTasksPage})} : 
-                      @{/(sortBy=priority)}"
+                      @{/finished-tasks(sortBy=priority)}"
                     >
                       <i class="fas fa-check me-2" th:if="${isPriority}"></i>
                       Độ ưu tiên
@@ -273,7 +274,6 @@
                   alt="logo ute"
                 /><span> </span><span
                   class="text-black-50 ml-2"
-                  th:class="${task.priority == 'high'} ? 'text-danger' : (${task.priority == 'medium'} ? 'text-warning' : 'text-success')"
                   th:text="'Độ ưu tiên: ' + ${task.priority}"
                 ></span>
                 <span class="badge bg-success ms-2" th:if="${task.isCompleted}">Đã hoàn thành</span>
@@ -317,7 +317,7 @@
         </div>
       </div>
 
-      <!-- <div class="d-flex justify-content-end text-right mt-2">
+      <div class="d-flex justify-content-end text-right mt-2">
         <nav>
           <ul class="pagination">
             <li class="page-item">
@@ -337,7 +337,7 @@
             </li>
           </ul>
         </nav>
-      </div> -->
+      </div>
     </div>
     <div th:insert="_footer :: footer"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

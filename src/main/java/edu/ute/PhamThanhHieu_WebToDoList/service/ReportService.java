@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lowagie.text.Document;
@@ -55,20 +54,20 @@ public class ReportService {
             
             // Add title
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-            Paragraph title = new Paragraph("Báo cáo công việc cần làm", titleFont);
+            Paragraph title = new Paragraph("Bao cao cong viec can lam", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
             title.setSpacingAfter(20);
             document.add(title);
             
             // Add user information
             Font userInfoFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
-            Paragraph userInfo = new Paragraph("Người dùng: " + user.getUsername(), userInfoFont);
+            Paragraph userInfo = new Paragraph("Nguoi dung: " + user.getUsername(), userInfoFont);
             userInfo.setSpacingAfter(10);
             document.add(userInfo);
             
             // Add current date
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            Paragraph dateInfo = new Paragraph("Ngày in báo cáo: " + java.time.LocalDate.now().format(formatter));
+            Paragraph dateInfo = new Paragraph("Ngay in bao cao: " + java.time.LocalDate.now().format(formatter));
             dateInfo.setSpacingAfter(20);
             document.add(dateInfo);
             
@@ -82,7 +81,7 @@ public class ReportService {
             Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10);
             PdfPCell headerCell;
             
-            String[] headers = {"Công việc", "Mô tả", "Ngày đến hạn", "Ưu tiên", "Hoàn thành?"};
+            String[] headers = {"Cong viec", "Mo ta", "Ngay den han", "Do uu tien", "Hoan thanh?"};
             for (String header : headers) {
                 headerCell = new PdfPCell(new Phrase(header, headerFont));
                 headerCell.setBackgroundColor(Color.LIGHT_GRAY);
@@ -131,16 +130,23 @@ public class ReportService {
                 table.addCell(cell);
                 
                 // Completed
-                // cell = new PdfPCell(new Phrase(task.getIsCompleted() ? "Yes" : "No", dataFont));
-                // cell.setPadding(5);
-                // cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                // table.addCell(cell);
+                cell = new PdfPCell(new Phrase(task.getIsCompleted() ? "Yes" : "No", dataFont));
+                cell.setPadding(5);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                // Set Yes task to green
+                if (task.getIsCompleted()){
+                    cell.setBackgroundColor(Color.GREEN);
+                }
+
+                table.addCell(cell);
+
+                
             }
             
             document.add(table);
             
             // Add summary
-            Paragraph summary = new Paragraph("\nCông việc tổng cộng: " + tasks.size(), userInfoFont);
+            Paragraph summary = new Paragraph("\nCo tong cong: " + tasks.size() + " cong viec can lam.", userInfoFont);
             summary.setSpacingBefore(20);
             document.add(summary);
             

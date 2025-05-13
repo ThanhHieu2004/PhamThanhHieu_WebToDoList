@@ -256,6 +256,7 @@
                   alt="logo ute"
                 /><span> </span><span
                   class="text-black-50 ml-2"
+                  th:class="${task.priority == 'high'} ? 'text-danger' : (${task.priority == 'medium'} ? 'text-warning' : 'text-success')"
                   th:text="'Độ ưu tiên: ' + ${task.priority}"
                 ></span>
               </div>
