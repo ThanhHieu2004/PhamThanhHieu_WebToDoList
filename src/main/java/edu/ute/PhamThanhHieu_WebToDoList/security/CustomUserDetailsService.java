@@ -1,7 +1,5 @@
 package edu.ute.PhamThanhHieu_WebToDoList.security;
 
-import java.util.List;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
