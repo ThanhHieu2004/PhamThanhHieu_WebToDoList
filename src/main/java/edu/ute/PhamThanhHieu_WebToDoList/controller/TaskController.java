@@ -69,9 +69,17 @@ public class TaskController {
     }
 
     @GetMapping("/delete_task/{id}")
-    public String deleteTask(@PathVariable("id") int taskId) {
+    public String deleteTask(@PathVariable("id") int taskId,
+                           @RequestParam(required = false) Boolean fromFinishedPage,
+                           @RequestParam(required = false) String sortBy) {
         taskService.deleteTask(taskId);
-        return "redirect:/";
+        
+        // Redirect to the appropriate page based on where the delete action was initiated from
+        if (Boolean.TRUE.equals(fromFinishedPage)) {
+            return "redirect:/finished-tasks" + (sortBy != null ? "?sortBy=" + sortBy : "");
+        } else {
+            return "redirect:/" + (sortBy != null ? "?sortBy=" + sortBy : "");
+        }
     }
 
     @GetMapping("/edit_task/{id}")
@@ -127,6 +135,7 @@ public class TaskController {
     }    @GetMapping("/search_tasks")
     public String searchTasks(@RequestParam("keyword") String keyword, 
                              @RequestParam(required = false) String sortBy,
+                             @RequestParam(required = false) Boolean isCompleted,
                              Model model) {
         int userId = getCurrentUserId();
         TaskListResponseDTO taskListResponse = taskService.searchTasks(userId, keyword, sortBy);
@@ -137,7 +146,39 @@ public class TaskController {
         model.addAttribute("searchKeyword", keyword);
         model.addAttribute("sortBy", sortBy);
         
-        return "index";
+        // Determine which page to return to based on the task completion state
+        if (Boolean.TRUE.equals(isCompleted)) {
+            model.addAttribute("pageTitle", "Tìm kiếm trong công việc đã hoàn thành");
+            model.addAttribute("isFinishedTasksPage", true);
+            return "finished_task";
+        } else {
+            model.addAttribute("pageTitle", "Tìm kiếm trong công việc cần làm");
+            model.addAttribute("isFinishedTasksPage", false);
+            return "index";
+        }
+    }
+    
+    @GetMapping("/finish_task/{id}")
+    public String finishTask(@PathVariable("id") int taskId, 
+                            @RequestParam(required = false) String sortBy,
+                            @RequestParam(required = false) String keyword,
+                            @RequestParam(required = false) Boolean fromFinishedPage) {
+        // Mark task as completed
+        taskService.markTaskAsCompleted(taskId);
+        
+        // If there was a search keyword, redirect back to search results
+        if (keyword != null && !keyword.isEmpty()) {
+            return "redirect:/search_tasks?keyword=" + keyword 
+                + (sortBy != null ? "&sortBy=" + sortBy : "")
+                + (Boolean.TRUE.equals(fromFinishedPage) ? "&isCompleted=true" : "");
+        }
+        
+        // Otherwise redirect to the appropriate page with current sort
+        if (Boolean.TRUE.equals(fromFinishedPage)) {
+            return "redirect:/finished-tasks" + (sortBy != null ? "?sortBy=" + sortBy : "");
+        } else {
+            return "redirect:/" + (sortBy != null ? "?sortBy=" + sortBy : "");
+        }
     }
 
     private int getCurrentUserId() {

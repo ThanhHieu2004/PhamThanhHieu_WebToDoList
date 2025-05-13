@@ -142,4 +142,63 @@ public class TaskService {
         response.setTasks(dtoList);
         return response;
     }
+      
+    public TaskListResponseDTO getCompletedTasksByUserId(int userId, String sortBy) {
+        List<Task> taskList;
+        
+        // Sort by specified criteria for completed tasks
+        if (sortBy == null || sortBy.equals("newest")) {
+            taskList = taskRepo.findByUserIdAndIsCompletedOrderByCreatedAtDesc(userId, true);
+        } else if (sortBy.equals("dueDate")) {
+            taskList = taskRepo.findByUserIdAndIsCompletedOrderByDueDateAsc(userId, true);
+        } else if (sortBy.equals("priority")) {
+            taskList = taskRepo.findByUserIdAndIsCompletedOrderByPriorityDesc(userId, true);
+        } else {
+            // Default sorting by creation date (newest first)
+            taskList = taskRepo.findByUserIdAndIsCompletedOrderByCreatedAtDesc(userId, true);
+        }
+        
+        List<TaskResponseDTO> dtoList = taskMapper.toDtoList(taskList); 
+        TaskListResponseDTO response = new TaskListResponseDTO();
+        response.setTasks(dtoList);
+        return response;
+    }
+    
+    public TaskListResponseDTO getPendingTasksByUserId(int userId, String sortBy) {
+        List<Task> taskList;
+        
+        // Sort by specified criteria for pending tasks
+        if (sortBy == null || sortBy.equals("newest")) {
+            taskList = taskRepo.findByUserIdAndIsCompletedOrderByCreatedAtDesc(userId, false);
+        } else if (sortBy.equals("dueDate")) {
+            taskList = taskRepo.findByUserIdAndIsCompletedOrderByDueDateAsc(userId, false);
+        } else if (sortBy.equals("priority")) {
+            taskList = taskRepo.findByUserIdAndIsCompletedOrderByPriorityDesc(userId, false);
+        } else {
+            // Default sorting by creation date (newest first)
+            taskList = taskRepo.findByUserIdAndIsCompletedOrderByCreatedAtDesc(userId, false);
+        }
+        
+        List<TaskResponseDTO> dtoList = taskMapper.toDtoList(taskList); 
+        TaskListResponseDTO response = new TaskListResponseDTO();
+        response.setTasks(dtoList);
+        return response;
+    }
+      
+    public TaskResponseDTO markTaskAsCompleted(int taskId) {
+        Optional<Task> taskOpt = taskRepo.findById(taskId);
+        if (taskOpt.isPresent()) {
+            Task task = taskOpt.get();
+            
+            // Mark the task as completed
+            task.setIsCompleted(true);
+            task.setUpdatedAt(LocalDateTime.now());
+            
+            // Save the updated task
+            Task updatedTask = taskRepo.save(task);
+            
+            return taskMapper.toDto(updatedTask);
+        }
+        return null;
+    }
 }

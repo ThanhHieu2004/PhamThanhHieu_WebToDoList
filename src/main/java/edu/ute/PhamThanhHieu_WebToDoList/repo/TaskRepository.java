@@ -16,6 +16,11 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     List<Task> findByUserIdAndCategoryId(int userId, int categoryId);
     List<Task> findByUserIdAndDueDateBefore(int userId, LocalDate dueDate);
     
+    // Methods for completed/pending task filtering with sorting
+    List<Task> findByUserIdAndIsCompletedOrderByCreatedAtDesc(int userId, Boolean isCompleted);
+    List<Task> findByUserIdAndIsCompletedOrderByDueDateAsc(int userId, Boolean isCompleted);
+    List<Task> findByUserIdAndIsCompletedOrderByPriorityDesc(int userId, Boolean isCompleted);
+    
     // Search functionality
     List<Task> findByUserIdAndTitleContainingIgnoreCaseOrUserIdAndDescriptionContainingIgnoreCase(
         int userId1, String keyword1, int userId2, String keyword2);

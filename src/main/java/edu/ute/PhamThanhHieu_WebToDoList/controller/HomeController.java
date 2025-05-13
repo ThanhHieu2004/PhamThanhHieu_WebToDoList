@@ -16,15 +16,32 @@ import org.springframework.security.core.Authentication;
 public class HomeController {
 
     @Autowired
-    TaskService taskService;    @GetMapping("/")
+    TaskService taskService;
+
+    @GetMapping("/")
     public String index(Model model, @org.springframework.web.bind.annotation.RequestParam(required = false) String sortBy) {
         int userId = getCurrentUserId(); // retrieve user ID from session or security
-        TaskListResponseDTO taskDto = taskService.getTasksByUserId(userId, sortBy);
+        TaskListResponseDTO taskDto = taskService.getPendingTasksByUserId(userId, sortBy);
         
         model.addAttribute("taskCount", taskDto.getTasks().size());
         model.addAttribute("taskListResponse", taskDto);
         model.addAttribute("sortBy", sortBy);
+        model.addAttribute("pageTitle", "Công việc cần làm");
+        model.addAttribute("isFinishedTasksPage", false);
         return "index";
+    }
+
+    @GetMapping("/finished-tasks")
+    public String finishedTasks(Model model, @org.springframework.web.bind.annotation.RequestParam(required = false) String sortBy) {
+        int userId = getCurrentUserId();
+        TaskListResponseDTO taskDto = taskService.getCompletedTasksByUserId(userId, sortBy);
+        
+        model.addAttribute("taskCount", taskDto.getTasks().size());
+        model.addAttribute("taskListResponse", taskDto);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("pageTitle", "Công việc đã hoàn thành");
+        model.addAttribute("isFinishedTasksPage", true);
+        return "finished_task";
     }
 
     private int getCurrentUserId() {

@@ -14,8 +14,9 @@
           </a>
     
           <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="/" class="nav-link px-2 link-secondary">Trang chủ</a></li>
-            <li><a href="/bao-cao" class="nav-link px-2 link-dark">Tải xuống báo cáo</a></li>
+            <li><a href="/" th:class="${isFinishedTasksPage == false} ? 'nav-link px-2 link-primary fw-bold' : 'nav-link px-2 link-dark'">Công việc cần làm</a></li>
+            <li><a href="/finished-tasks" th:class="${isFinishedTasksPage == true} ? 'nav-link px-2 link-primary fw-bold' : 'nav-link px-2 link-dark'">Công việc đã hoàn thành</a></li>
+            <li><a href="/bao-cao" class="nav-link px-2 link-dark" target="_blank">Tải xuống báo cáo</a></li>
           </ul>
     
           <div class="col-md-3 text-end">
