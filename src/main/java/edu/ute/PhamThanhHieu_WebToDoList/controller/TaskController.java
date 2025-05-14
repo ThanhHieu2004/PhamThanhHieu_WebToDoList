@@ -69,17 +69,9 @@ public class TaskController {
     }
 
     @GetMapping("/delete_task/{id}")
-    public String deleteTask(@PathVariable("id") int taskId,
-                           @RequestParam(required = false) Boolean fromFinishedPage,
-                           @RequestParam(required = false) String sortBy) {
+    public String deleteTask(@PathVariable("id") int taskId) {
         taskService.deleteTask(taskId);
-        
-        // Redirect to the appropriate page based on where the delete action was initiated from
-        if (Boolean.TRUE.equals(fromFinishedPage)) {
-            return "redirect:/finished-tasks" + (sortBy != null ? "?sortBy=" + sortBy : "");
-        } else {
-            return "redirect:/" + (sortBy != null ? "?sortBy=" + sortBy : "");
-        }
+        return "redirect:/";
     }
 
     @GetMapping("/edit_task/{id}")
