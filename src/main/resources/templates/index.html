@@ -274,6 +274,7 @@
                 /><span> </span><span
                   class="text-black-50 ml-2"
                   th:text="'Độ ưu tiên: ' + ${task.priority}"
+                  th:class="${task.priority == 'high'} ? 'text-danger' : (${task.priority == 'medium'} ? 'text-warning' : 'text-success')"
                 ></span>
                 <span class="badge bg-success ms-2" th:if="${task.isCompleted}">Đã hoàn thành</span>
               </div>
@@ -316,7 +317,7 @@
         </div>
       </div>
 
-      <div class="d-flex justify-content-end text-right mt-2">
+      <!-- <div class="d-flex justify-content-end text-right mt-2">
         <nav>
           <ul class="pagination">
             <li class="page-item">
@@ -336,7 +337,7 @@
             </li>
           </ul>
         </nav>
-      </div>
+      </div> -->
     </div>
     <div th:insert="_footer :: footer"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

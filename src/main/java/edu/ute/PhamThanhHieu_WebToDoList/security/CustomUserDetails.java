@@ -23,7 +23,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null; // You can implement roles if needed
+        return null; 
     }
 
     @Override
@@ -33,7 +33,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        // Use email as the username for Spring Security authentication
+        
         return user.getEmail();
     }
 
